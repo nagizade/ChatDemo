@@ -1,4 +1,4 @@
-package com.nagizade.chatdemo;
+package com.nagizade.chatdemo.Adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.nagizade.chatdemo.AppTabs.ChatsFragment;
 import com.nagizade.chatdemo.AppTabs.ContactsFragment;
+import com.nagizade.chatdemo.R;
 
 /**
  * Created by Hasan Nagizade on 3/21/2018.
