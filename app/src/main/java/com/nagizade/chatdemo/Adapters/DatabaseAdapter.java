@@ -1,107 +1,116 @@
 package com.nagizade.chatdemo.Adapters;
 
+import android.app.Notification;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.nagizade.chatdemo.MessageModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by Hasan Nagizade on 3/22/2018.
+ * Created by Hasan Nagizade on 3/23/2018.
  */
-    import android.content.ContentValues;
-    import android.content.Context;
-    import android.database.Cursor;
-    import android.database.sqlite.SQLiteDatabase;
-    import android.database.sqlite.SQLiteOpenHelper;
+public class DatabaseAdapter extends SQLiteOpenHelper {
+
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+
+    // Database Name
+    private static final String DATABASE_NAME = "messages_db";
 
 
-public class DatabaseAdapter {
-    myDbHelper myhelper;
-    public DatabaseAdapter(Context context)
-    {
-        myhelper = new myDbHelper(context);
+    public DatabaseAdapter(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public long insertData(String user, String message)
-    {
-        SQLiteDatabase dbb = myhelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.MSG_USER, user);
-        contentValues.put(myDbHelper.MSG_CONTENT, message);
-        long id = dbb.insert(myDbHelper.TABLE_NAME, null , contentValues);
+    // Creating Tables
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+    }
+
+    public void createDb(SQLiteDatabase db,String tableName) {
+        // create table
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + MessageModel.TABLE_NAME+tableName + MessageModel.CREATE_TABLE);
+    }
+
+    public long insertMessage(String username,String messageContent,String tableName) {
+        // get writable database as we want to write data
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        // `id` and `timestamp` will be inserted automatically.
+        // no need to add them
+        values.put(MessageModel.MSG_USER, username);
+        values.put(MessageModel.MSG_CONTENT, messageContent);
+
+        // insert row
+        long id = db.insert(MessageModel.TABLE_NAME+tableName, null, values);
+
+        // close db connection
+        db.close();
+
+        // return newly inserted row id
         return id;
     }
 
-    public String getData()
-    {
-        SQLiteDatabase db = myhelper.getWritableDatabase();
-        String[] columns = {myDbHelper.UID,myDbHelper.MSG_DATE,myDbHelper.MSG_TIME,myDbHelper.MSG_USER,myDbHelper.MSG_CONTENT};
-        Cursor cursor =db.query(myDbHelper.TABLE_NAME,columns,null,null,null,null,null);
-        StringBuffer buffer= new StringBuffer();
-        while (cursor.moveToNext())
-        {
-            int cid =cursor.getInt(cursor.getColumnIndex(myDbHelper.UID));
-            String  messageDate    =cursor.getString(cursor.getColumnIndex(myDbHelper.MSG_DATE));
-            String  messageTime    =cursor.getString(cursor.getColumnIndex(myDbHelper.MSG_TIME));
-            String  messageSender  =cursor.getString(cursor.getColumnIndex(myDbHelper.MSG_USER));
-            String  messageContent =cursor.getString(cursor.getColumnIndex(myDbHelper.MSG_CONTENT));
-            buffer.append(cid+ "   " + messageDate + "   " + messageTime + "   " + messageSender + "   " + messageContent + " \n");
+    public List<MessageModel> getAllMessages(String username) {
+        List<MessageModel> messages = new ArrayList<>();
+        String tableName = MessageModel.TABLE_NAME+username;
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tableName + " ORDER BY " +
+                MessageModel.MSG_TIME + " DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                MessageModel msgm = new MessageModel();
+                msgm.setId(cursor.getInt(cursor.getColumnIndex(MessageModel.UID)));
+                msgm.setUsername(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_USER)));
+                msgm.setTimestamp(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_TIME)));
+                msgm.setMessageContent(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_CONTENT)));
+                messages.add(msgm);
+            } while (cursor.moveToNext());
         }
-        return buffer.toString();
+
+        // close db connection
+        db.close();
+
+        // return messages list
+        return messages;
     }
 
-    public  int delete(String uname)
-    {
-        SQLiteDatabase db = myhelper.getWritableDatabase();
-        String[] whereArgs ={uname};
+    public int getMessagesCount(String username) {
+        String countQuery = "SELECT  * FROM " + MessageModel.TABLE_NAME+username;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
 
-        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.MSG_DATE+" = ?",whereArgs);
-        return  count;
-    }
+        int count = cursor.getCount();
+        cursor.close();
 
-  /*  public int updateName(String oldName , String newName)
-    {
-        SQLiteDatabase db = myhelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.M,newName);
-        String[] whereArgs= {oldName};
-        int count =db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.TITLE+" = ?",whereArgs );
+
+        // return count
         return count;
-    }*/
+    }
 
-    static class myDbHelper extends SQLiteOpenHelper
-    {
-        private static final String DATABASE_NAME = "Chats";    // Database Name
-        private static final String TABLE_NAME = "ChatWith";   // Table Name
-        private static final int DATABASE_Version = 1;   // Database Version
-        private static final String UID="_id";     // Column I (Primary Key)
-        private static final String MSG_DATE = "Date";    //Column II
-        private static final String MSG_TIME= "Time";    // Column III
-        private static final String MSG_USER="User";
-        private static final String MSG_CONTENT="Message";
-        private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
-                " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+MSG_DATE+" DATE() ,"+ MSG_TIME+" TIME() ,"+MSG_USER+" TEXT ,"+MSG_CONTENT+" TEXT";
-        private static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
-        private Context context;
+    // Upgrading database
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drop older table if existed
+        db.execSQL("DROP TABLE IF EXISTS " + MessageModel.TABLE_NAME);
 
-        public myDbHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_Version);
-            this.context=context;
-        }
-
-        public void onCreate(SQLiteDatabase db) {
-
-            try {
-                db.execSQL(CREATE_TABLE);
-            } catch (Exception e) {
-
-            }
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            try {
-
-                db.execSQL(DROP_TABLE);
-                onCreate(db);
-            }catch (Exception e) {
-
-            }
-        }
+        // Create tables again
+        onCreate(db);
     }
 }
