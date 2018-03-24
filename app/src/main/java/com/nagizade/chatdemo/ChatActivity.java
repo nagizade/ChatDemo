@@ -67,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
         helper.insertMessage(userN, messageText, userNumber);
         messageContent.setText("");
         checker();
+        giveReply();
 
     }
 
@@ -77,6 +78,14 @@ public class ChatActivity extends AppCompatActivity {
             messages.addAll(helper.getAllMessages(userNumber));
             mAdapter.notifyDataSetChanged();
         }
+    }
+
+    //Simple reply system from contact
+    public void giveReply() {
+        String userN = userNumber;
+        String messageText = "Leylim ley!";
+        helper.insertMessage(userN,messageText,userNumber);
+        checker();
     }
 
 }

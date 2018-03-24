@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.nagizade.chatdemo.ChatActivity"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/chatLayout"
+    android:gravity="start|end">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_view"
@@ -13,6 +15,14 @@
         android:scrollbars="vertical"
         android:layout_above="@+id/include"
         android:layout_alignParentTop="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#dfdfdf"
+        android:layout_above="@+id/include"
+        android:layout_alignParentStart="true" />
+
 
     <include
         android:layout_width="match_parent"
