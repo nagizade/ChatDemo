@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         username       = intent.getStringExtra("Contact name");
-        userNumber     = intent.getStringExtra("Contact number");
+        userNumber     = intent.getStringExtra("Contact number").replaceAll("[\\D]", ""); //remove all special characters from phone number
         messageContent = (EditText) findViewById(R.id.messageContent);
         sendMessage    = (ImageButton) findViewById(R.id.sendMessage);
         messagesView = (RecyclerView) findViewById(R.id.chat_view);
