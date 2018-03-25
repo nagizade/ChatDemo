@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,6 +36,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        //Showing back button on toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         Intent intent = getIntent();
         username       = intent.getStringExtra("Contact name");
         userNumber     = intent.getStringExtra("Contact number");
@@ -42,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         messagesView = (RecyclerView) findViewById(R.id.chat_view);
         helper         = new DatabaseAdapter(this);
 
-
+        getSupportActionBar().setTitle(username);
         SQLiteDatabase db = helper.getWritableDatabase();
         helper.createDb(db, userNumber);
         messages.addAll(helper.getAllMessages(userNumber));
@@ -86,6 +93,17 @@ public class ChatActivity extends AppCompatActivity {
         String messageText = "Leylim ley!";
         helper.insertMessage(userN,messageText,userNumber);
         checker();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

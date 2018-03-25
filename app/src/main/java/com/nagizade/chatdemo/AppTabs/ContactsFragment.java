@@ -2,8 +2,12 @@ package com.nagizade.chatdemo.AppTabs;
 
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -22,6 +26,7 @@ import com.nagizade.chatdemo.Contact;
 import com.nagizade.chatdemo.ItemClickListener;
 import com.nagizade.chatdemo.R;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +70,7 @@ public class ContactsFragment extends Fragment {
         recyclerView.setAdapter(cAdapter);
 
 
-        // Showing all contacts from phone. We will come back here later for adding contact picture
+        // Adding all contacts into a list.
         ContentResolver cr = getActivity().getContentResolver(); //Activity/Application android.content.Context
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         if(cursor.moveToFirst())
@@ -81,8 +86,9 @@ public class ContactsFragment extends Fragment {
                     {
                         String contactName = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                         String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Bitmap contactPic  = openPhoto(id);
 
-                        Contact contact = new Contact(contactName,contactNumber);
+                        Contact contact = new Contact(contactName,contactNumber,contactPic);
                         contacts.add(contact);
                         break;
                     }
@@ -96,6 +102,31 @@ public class ContactsFragment extends Fragment {
         // Inflate the layout for this fragment
         return contactsFragment;
 
+
+    }
+
+    /**
+     * Getting bitmap profile picture of contact
+     */
+    public Bitmap openPhoto(String contactId) {
+        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId));
+        Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        Cursor cursor = getActivity().getContentResolver().query(photoUri,
+                new String[]{ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                byte[] data = cursor.getBlob(0);
+                if (data != null) {
+                    return BitmapFactory.decodeStream(new ByteArrayInputStream(data));
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return null;
 
     }
 }
