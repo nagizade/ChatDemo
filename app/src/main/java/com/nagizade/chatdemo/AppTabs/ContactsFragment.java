@@ -3,14 +3,18 @@ package com.nagizade.chatdemo.AppTabs;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +58,8 @@ public class ContactsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        
         //When user clicks on a Contact we will send him to ChatActivity with clicked Contact details
         ItemClickListener listener = new ItemClickListener() {
             @Override
@@ -128,5 +133,36 @@ public class ContactsFragment extends Fragment {
         }
         return null;
 
+    }
+
+    /**
+      * Divider for our RecyclerView
+      */
+
+    public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+        private Drawable mDivider;
+
+        public SimpleDividerItemDecoration(Context context) {
+            mDivider = ContextCompat.getDrawable(getActivity(), R.drawable.line_divider);
+        }
+
+        @Override
+        public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
+        }
     }
 }
