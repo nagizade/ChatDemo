@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkFirstRun();
+
+        getSupportActionBar().setElevation(0);
         //Finding ViewPager for swiping between tabs then creating adapter to know
         //which fragment should be shown on each page
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);

@@ -25,6 +25,7 @@ import com.nagizade.chatdemo.Adapters.DatabaseAdapter;
 import com.nagizade.chatdemo.Adapters.MessagesAdapter;
 import com.nagizade.chatdemo.ChatActivity;
 import com.nagizade.chatdemo.Contact;
+import com.nagizade.chatdemo.DividerItemDecoration;
 import com.nagizade.chatdemo.ItemClickListener;
 import com.nagizade.chatdemo.LastMessageModel;
 import com.nagizade.chatdemo.MessageModel;
@@ -77,7 +78,10 @@ public class ChatsFragment extends Fragment{
         chatsView = (RecyclerView) chatsFragment.findViewById(R.id.chatsList);
         viewAdapter = new ChatsViewAdapter(messages,listener);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity().getApplicationContext());
+        chatsView.setHasFixedSize(true);
         chatsView.setLayoutManager(mLayoutManager2);
+        DividerItemDecoration decor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+        chatsView.addItemDecoration(decor);
         chatsView.setItemAnimator(new DefaultItemAnimator());
         chatsView.setAdapter(viewAdapter);
 

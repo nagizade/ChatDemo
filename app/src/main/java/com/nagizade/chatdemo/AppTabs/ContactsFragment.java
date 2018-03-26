@@ -27,6 +27,7 @@ import android.widget.Toolbar;
 import com.nagizade.chatdemo.Adapters.ContactsAdapter;
 import com.nagizade.chatdemo.ChatActivity;
 import com.nagizade.chatdemo.Contact;
+import com.nagizade.chatdemo.DividerItemDecoration;
 import com.nagizade.chatdemo.ItemClickListener;
 import com.nagizade.chatdemo.R;
 
@@ -58,7 +59,7 @@ public class ContactsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),LinearLayoutManager.VERTICAL));
         //When user clicks on a Contact we will send him to ChatActivity with clicked Contact details
         ItemClickListener listener = new ItemClickListener() {
             @Override

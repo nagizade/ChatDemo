@@ -10,27 +10,40 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Name"
-        android:id="@+id/contactName"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Number"
+        android:id="@+id/contactNumber"
+        android:layout_gravity="right|top"
+        android:layout_below="@+id/contactName"
         android:layout_toEndOf="@+id/contactPicture" />
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/contactPicture"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_person_black_48dp"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FF000000"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="left|center_vertical" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Number"
-        android:id="@+id/contactNumber"
-        android:layout_below="@+id/contactName"
-        android:layout_toEndOf="@+id/contactPicture" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/contactPicture"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/contactNumber" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Name"
+        android:id="@+id/contactName"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_alignTop="@+id/contactPicture"
+        android:layout_toEndOf="@+id/contactPicture"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>

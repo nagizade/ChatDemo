@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
         helper.createDb(db, userNumber);
         messages.addAll(helper.getAllMessages(userNumber));
         mAdapter = new MessagesAdapter(messages);
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,true);
         messagesView.setLayoutManager(mLayoutManager2);
         messagesView.setItemAnimator(new DefaultItemAnimator());
         // messagesView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));

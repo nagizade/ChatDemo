@@ -66,7 +66,7 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
 
     public ChatsViewAdapter(List<LastMessageModel> messagesList,ItemClickListener listener) {
         this.messagesList = messagesList;
-            mListener = listener;
+        mListener = listener;
     }
     @Override
     public ChatsViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,6 +87,7 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
         // We will show default placeholder image
         Bitmap u = openPhoto(contact.getProfilePic(),holder);
         if (u != null) {
+
             holder.contactPic.setImageBitmap(u);
         } else {
             holder.contactPic.setImageResource(R.drawable.ic_person_black_48dp);
@@ -143,7 +144,7 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
                     Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",new String[]{ id }, null);
                     while (pCur.moveToNext())
                     {
-                         contactName = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        contactName = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 
                         break;
 
@@ -176,4 +177,7 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
 
         return "";
     }
+
+
+    
 }
