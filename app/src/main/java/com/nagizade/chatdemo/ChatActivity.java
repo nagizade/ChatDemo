@@ -24,9 +24,10 @@ public class ChatActivity extends AppCompatActivity {
 
     private String           username;
     private String           userNumber;
-    private EditText         messageContent;
-    private ImageButton      sendMessage;
-    private DatabaseAdapter  helper;
+    private String             contactID;
+    private EditText           messageContent;
+    private ImageButton        sendMessage;
+    private DatabaseAdapter    helper;
     private List<MessageModel> messages = new ArrayList<>();
     private RecyclerView     messagesView;
     private MessagesAdapter  mAdapter;
@@ -44,6 +45,7 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username       = intent.getStringExtra("Contact name");
         userNumber     = intent.getStringExtra("Contact number").replaceAll("[\\D]", ""); //remove all special characters from phone number
+        contactID      = intent.getStringExtra("Contact id");
         messageContent = (EditText) findViewById(R.id.messageContent);
         sendMessage    = (ImageButton) findViewById(R.id.sendMessage);
         messagesView = (RecyclerView) findViewById(R.id.chat_view);
@@ -72,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
         String userN = "me";
         String messageText = messageContent.getText().toString();
         helper.insertMessage(userN, messageText, userNumber);
+        helper.insertLastMessage(userNumber,messageText,contactID);
         messageContent.setText("");
         checker();
         giveReply();
@@ -90,8 +93,9 @@ public class ChatActivity extends AppCompatActivity {
     //Simple reply system from contact
     public void giveReply() {
         String userN = userNumber;
-        String messageText = "Leylim ley!";
+        String messageText = "Hello";
         helper.insertMessage(userN,messageText,userNumber);
+        helper.insertLastMessage(userN,messageText,contactID);
         checker();
     }
 

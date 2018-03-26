@@ -43,6 +43,7 @@ public class MessageModel{
         this.messageContent = messageContent;
     }
 
+
     public int getId() {
         return id;
     }
@@ -72,4 +73,6 @@ public class MessageModel{
     public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
     }
+
+
 }

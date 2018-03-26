@@ -59,7 +59,6 @@ public class ContactsFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        
         //When user clicks on a Contact we will send him to ChatActivity with clicked Contact details
         ItemClickListener listener = new ItemClickListener() {
             @Override
@@ -67,15 +66,14 @@ public class ContactsFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("Contact name",contacts.get(position).getContact_name());
                 intent.putExtra("Contact number",contacts.get(position).getContact_number());
+                intent.putExtra("Contact id",contacts.get(position).getContactID());
                 startActivity(intent);
             }
         };
-
         cAdapter = new ContactsAdapter(contacts,listener);
         recyclerView.setAdapter(cAdapter);
 
-
-        // Adding all contacts into a list.
+       // Adding all contacts into a list.
         ContentResolver cr = getActivity().getContentResolver(); //Activity/Application android.content.Context
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         if(cursor.moveToFirst())
@@ -92,8 +90,7 @@ public class ContactsFragment extends Fragment {
                         String contactName = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                         String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         Bitmap contactPic  = openPhoto(id);
-
-                        Contact contact = new Contact(contactName,contactNumber,contactPic);
+                        Contact contact = new Contact(contactName,contactNumber,contactPic,id);
                         contacts.add(contact);
                         break;
                     }

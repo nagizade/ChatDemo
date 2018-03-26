@@ -1,16 +1,13 @@
 package com.nagizade.chatdemo.Adapters;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nagizade.chatdemo.AppTabs.ContactsFragment;
 import com.nagizade.chatdemo.Contact;
 import com.nagizade.chatdemo.ItemClickListener;
 import com.nagizade.chatdemo.R;
@@ -30,9 +27,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView contactName,contactNumber;
-        public ImageView contactPic;
-        private ItemClickListener mListener;
+        public   TextView          contactName,contactNumber;
+        public   ImageView         contactPic;
+        private  ItemClickListener mListener;
 
         MyViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);

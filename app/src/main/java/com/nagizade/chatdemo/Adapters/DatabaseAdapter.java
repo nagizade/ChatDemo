@@ -1,14 +1,12 @@
 package com.nagizade.chatdemo.Adapters;
 
-import android.app.Notification;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.nagizade.chatdemo.LastMessageModel;
 import com.nagizade.chatdemo.MessageModel;
 
 import java.util.ArrayList;
@@ -37,8 +35,18 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
     }
 
     public void createDb(SQLiteDatabase db,String tableName) {
-        // create table
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + MessageModel.TABLE_NAME+tableName + MessageModel.CREATE_TABLE);
+
+
+            // create table
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + MessageModel.TABLE_NAME + tableName + MessageModel.CREATE_TABLE);
+
+
+    }
+
+    public void createLastMessagesTable(SQLiteDatabase db) {
+
+     db.execSQL(LastMessageModel.CREATE_TABLE);
+
     }
 
     public long insertMessage(String username,String messageContent,String tableName) {
@@ -59,6 +67,35 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 
         // return newly inserted row id
         return id;
+    }
+
+    public long insertLastMessage(String username,String messageContent,String contactID) {
+        // get writable database as we want to write data
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        String Query = "SELECT * FROM " + "lastMessages" + " WHERE " + "user_name" + " = " + username;
+        Cursor cursor = db.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            // `id` and `timestamp` will be inserted automatically.
+            // no need to add them
+            values.put("user_name", username);
+            values.put("messageContent", messageContent);
+            values.put("contact_id",contactID);
+            // insert row
+            long id = db.insert("lastMessages", null, values);
+        } else {
+            cursor.close();
+            values.put("messageContent", messageContent);
+            values.put("contact_id",contactID);
+            long id = db.update("lastMessages", values, "user_name=" + username, null);
+        }
+       // close db connection
+        db.close();
+
+        // return newly inserted row id
+        return 1;
     }
 
     public List<MessageModel> getAllMessages(String username) {
@@ -89,6 +126,37 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 
         // return messages list
         return messages;
+    }
+
+
+    public List<LastMessageModel> getLastMessages() {
+        List<LastMessageModel> lastMessages = new ArrayList<>();
+        String tableName = "lastMessages";
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tableName;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                LastMessageModel msgm = new LastMessageModel();
+                msgm.setId(cursor.getInt(cursor.getColumnIndex(MessageModel.UID)));
+                msgm.setUsername(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_USER)));
+                msgm.setTimestamp(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_TIME)));
+                msgm.setLastMessage(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_CONTENT)));
+                msgm.setProfilePic(cursor.getString(cursor.getColumnIndex("contact_id")));
+                lastMessages.add(msgm);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return messages list
+        return lastMessages;
     }
 
     public int getMessagesCount(String username) {
