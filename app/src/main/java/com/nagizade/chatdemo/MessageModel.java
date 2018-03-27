@@ -12,6 +12,7 @@ public class MessageModel{
     public static final String MSG_DATE = "Date";    //Column II
     public static final String MSG_TIME= "Time";    // Column III
     public static final String MSG_USER="User";
+    public static final String USER_NUMBER="UserNumber";
     public static final String MSG_CONTENT="Message";
     public static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
 
@@ -20,6 +21,7 @@ public class MessageModel{
     private String msgDate;
     private String timestamp;
     private String username;
+    private String phoneNumber;
     private String messageContent;
 
 
@@ -29,6 +31,7 @@ public class MessageModel{
             + UID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MSG_TIME+" TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
             + MSG_USER+" TEXT ,"
+            + USER_NUMBER+" TEXT ,"
             + MSG_CONTENT+" TEXT"
             + ")";
 
@@ -36,11 +39,12 @@ public class MessageModel{
     public MessageModel() {
     }
 
-    public MessageModel(int id, String timestamp,String username, String messageContent) {
+    public MessageModel(int id, String timestamp,String username,String phoneNumber,String messageContent) {
         this.id = id;
         this.timestamp = timestamp;
         this.username = username;
         this.messageContent = messageContent;
+        this.phoneNumber = phoneNumber;
     }
 
 
@@ -64,6 +68,14 @@ public class MessageModel{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getMessageContent() {

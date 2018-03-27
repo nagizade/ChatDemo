@@ -68,8 +68,8 @@ public class ChatsFragment extends Fragment{
             public void onItemClick(View view, int position) {
 
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
-//              intent.putExtra("Contact name",contactName.getText().toString());
-                intent.putExtra("Contact number",messages.get(position).getUsername());
+                intent.putExtra("Contact name",messages.get(position).getUsername());
+                intent.putExtra("Contact number",messages.get(position).getUsernumber());
                 intent.putExtra("Contact id",messages.get(position).getProfilePic());
                 startActivity(intent);
             }

@@ -49,9 +49,9 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
 
         MyViewHolder(View itemView, ItemClickListener listener) {
             super(itemView);
-            senderName = (TextView) itemView.findViewById(R.id.contactName);
+            senderName = (TextView) itemView.findViewById(R.id.senderName);
             lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
-            contactPic = (ImageView) itemView.findViewById(R.id.contactPicture);
+            contactPic = (ImageView) itemView.findViewById(R.id.senderPicture);
             messageTime = (TextView) itemView.findViewById(R.id.messageTime);
 
             mListener = listener;
@@ -78,7 +78,7 @@ public class ChatsViewAdapter extends RecyclerView.Adapter<ChatsViewAdapter.MyVi
     @Override
     public void onBindViewHolder(ChatsViewAdapter.MyViewHolder holder, int position) {
         LastMessageModel contact = messagesList.get(position);
-        holder.senderName.setText(getContactName(contact.getProfilePic(),holder));
+        holder.senderName.setText(contact.getUsername());
         holder.lastMessage.setText(contact.getLastMessage());
         holder.messageTime.setText(formatDate(contact.getTimestamp()));
 

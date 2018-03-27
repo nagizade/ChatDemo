@@ -73,8 +73,8 @@ public class ChatActivity extends AppCompatActivity {
     public void sendMessageClick(View v) {
         String userN = "me";
         String messageText = messageContent.getText().toString();
-        helper.insertMessage(userN, messageText, userNumber);
-        helper.insertLastMessage(userNumber,messageText,contactID);
+        helper.insertMessage(userN, userNumber, userNumber,messageText);
+        helper.insertLastMessage(username,userNumber,messageText,contactID);
         messageContent.setText("");
         checker();
         giveReply();
@@ -92,10 +92,9 @@ public class ChatActivity extends AppCompatActivity {
 
     //Simple reply system from contact
     public void giveReply() {
-        String userN = userNumber;
         String messageText = "Hello";
-        helper.insertMessage(userN,messageText,userNumber);
-        helper.insertLastMessage(userN,messageText,contactID);
+        helper.insertMessage(username,userNumber,userNumber,messageText);
+        helper.insertLastMessage(username,userNumber,messageText,contactID);
         checker();
     }
 

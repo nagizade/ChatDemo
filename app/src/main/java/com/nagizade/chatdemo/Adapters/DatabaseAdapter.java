@@ -49,7 +49,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
 
     }
 
-    public long insertMessage(String username,String messageContent,String tableName) {
+    public long insertMessage(String username,String phoneNumber,String tableName,String messageContent) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -57,6 +57,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
         values.put(MessageModel.MSG_USER, username);
+        values.put(MessageModel.USER_NUMBER,phoneNumber);
         values.put(MessageModel.MSG_CONTENT, messageContent);
 
         // insert row
@@ -69,18 +70,19 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
         return id;
     }
 
-    public long insertLastMessage(String username,String messageContent,String contactID) {
+    public long insertLastMessage(String username,String usernumber,String messageContent,String contactID) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        String Query = "SELECT * FROM " + "lastMessages" + " WHERE " + "user_name" + " = " + username;
+        String Query = "SELECT * FROM " + "lastMessages" + " WHERE " + "user_number" + " = " + usernumber;
         Cursor cursor = db.rawQuery(Query, null);
         if(cursor.getCount() <= 0){
             cursor.close();
             // `id` and `timestamp` will be inserted automatically.
             // no need to add them
             values.put("user_name", username);
+            values.put("user_number", usernumber);
             values.put("messageContent", messageContent);
             values.put("contact_id",contactID);
             // insert row
@@ -89,7 +91,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
             cursor.close();
             values.put("messageContent", messageContent);
             values.put("contact_id",contactID);
-            long id = db.update("lastMessages", values, "user_name=" + username, null);
+            long id = db.update("lastMessages", values, "user_number=" + usernumber, null);
         }
        // close db connection
         db.close();
@@ -98,9 +100,9 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
         return 1;
     }
 
-    public List<MessageModel> getAllMessages(String username) {
+    public List<MessageModel> getAllMessages(String usernumber) {
         List<MessageModel> messages = new ArrayList<>();
-        String tableName = MessageModel.TABLE_NAME+username;
+        String tableName = MessageModel.TABLE_NAME+usernumber;
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + tableName + " ORDER BY " +
@@ -115,6 +117,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
                 MessageModel msgm = new MessageModel();
                 msgm.setId(cursor.getInt(cursor.getColumnIndex(MessageModel.UID)));
                 msgm.setUsername(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_USER)));
+                msgm.setPhoneNumber(cursor.getString(cursor.getColumnIndex(MessageModel.USER_NUMBER)));
                 msgm.setTimestamp(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_TIME)));
                 msgm.setMessageContent(cursor.getString(cursor.getColumnIndex(MessageModel.MSG_CONTENT)));
                 messages.add(msgm);
@@ -145,6 +148,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
                 LastMessageModel msgm = new LastMessageModel();
                 msgm.setId(cursor.getInt(cursor.getColumnIndex(MessageModel.UID)));
                 msgm.setUsername(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_USER)));
+                msgm.setUsernumber(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_USERNUMBER)));
                 msgm.setTimestamp(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_TIME)));
                 msgm.setLastMessage(cursor.getString(cursor.getColumnIndex(LastMessageModel.LASTMSG_CONTENT)));
                 msgm.setProfilePic(cursor.getString(cursor.getColumnIndex("contact_id")));
