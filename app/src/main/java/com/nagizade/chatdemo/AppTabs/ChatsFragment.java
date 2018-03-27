@@ -59,8 +59,18 @@ public class ChatsFragment extends Fragment{
                              Bundle savedInstanceState) {
         View chatsFragment = inflater.inflate(R.layout.fragment_chats, container, false);
 
+
+        // Inflate the layout for this fragment
+        return chatsFragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         helper   = new DatabaseAdapter(getActivity());
         db       = helper.getReadableDatabase();
+        messages.clear();
         messages.addAll(helper.getLastMessages());
 
         final ItemClickListener listener = new ItemClickListener() {
@@ -75,7 +85,7 @@ public class ChatsFragment extends Fragment{
             }
         };
 
-        chatsView = (RecyclerView) chatsFragment.findViewById(R.id.chatsList);
+        chatsView = (RecyclerView) getActivity().findViewById(R.id.chatsList);
         viewAdapter = new ChatsViewAdapter(messages,listener);
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity().getApplicationContext());
         chatsView.setHasFixedSize(true);
@@ -85,8 +95,6 @@ public class ChatsFragment extends Fragment{
         chatsView.setItemAnimator(new DefaultItemAnimator());
         chatsView.setAdapter(viewAdapter);
 
-        // Inflate the layout for this fragment
-        return chatsFragment;
     }
 
 
