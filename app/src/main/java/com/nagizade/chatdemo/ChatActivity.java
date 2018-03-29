@@ -9,6 +9,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -22,15 +24,15 @@ import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private String           username;
-    private String           userNumber;
+    private String             username;
+    private String             userNumber;
     private String             contactID;
     private EditText           messageContent;
     private ImageButton        sendMessage;
     private DatabaseAdapter    helper;
     private List<MessageModel> messages = new ArrayList<>();
-    private RecyclerView     messagesView;
-    private MessagesAdapter  mAdapter;
+    private RecyclerView       messagesView;
+    private MessagesAdapter    mAdapter;
 
 
     @Override
@@ -51,7 +53,38 @@ public class ChatActivity extends AppCompatActivity {
         messagesView = (RecyclerView) findViewById(R.id.chat_view);
         helper         = new DatabaseAdapter(this);
 
+        //To be sure that sent message is not empty we will disable and hide sendMessage button
+        // It will be visible and enabled only when user enters something
+
+        sendMessage.setEnabled(false);
+        sendMessage.setVisibility(View.INVISIBLE);
+        messageContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().trim().equals("")) {
+                    sendMessage.setEnabled(false);
+                    sendMessage.setVisibility(View.INVISIBLE);
+                } else {
+                    sendMessage.setEnabled(true);
+                    sendMessage.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        //We will set username as title for acitivity
         getSupportActionBar().setTitle(username);
+
+
         SQLiteDatabase db = helper.getWritableDatabase();
         helper.createDb(db, userNumber);
         messages.addAll(helper.getAllMessages(userNumber));
@@ -70,14 +103,16 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    //When sendMessage button is clicked we add entered message to the chat table with this user
     public void sendMessageClick(View v) {
+        String messageText = messageContent.getText().toString().trim();
         String userN = "me";
-        String messageText = messageContent.getText().toString();
         helper.insertMessage(userN, userNumber, userNumber,messageText);
         helper.insertLastMessage(username,userNumber,messageText,contactID);
         messageContent.setText("");
         checker();
         giveReply();
+
 
     }
 
