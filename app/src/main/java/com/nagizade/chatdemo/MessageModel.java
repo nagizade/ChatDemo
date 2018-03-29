@@ -29,7 +29,7 @@ public class MessageModel{
     // Create table SQL query
     public static final String CREATE_TABLE = " ("
             + UID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + MSG_TIME+" TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
+            + MSG_TIME+" TIMESTAMP DATE DEFAULT (datetime('now','localtime')),"
             + MSG_USER+" TEXT ,"
             + USER_NUMBER+" TEXT ,"
             + MSG_CONTENT+" TEXT"

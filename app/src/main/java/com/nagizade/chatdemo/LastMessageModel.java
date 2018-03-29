@@ -28,7 +28,7 @@ public class LastMessageModel {
             + "user_name" + " TEXT ,"
             + "user_number" + " TEXT ,"
             + "contact_id" + " TEXT ,"
-            + "msg_time" + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,"
+            + "msg_time" + " TIMESTAMP DATE DEFAULT (datetime('now','localtime')) ,"
             + "messageContent" + " TEXT"
             + ")";
 
