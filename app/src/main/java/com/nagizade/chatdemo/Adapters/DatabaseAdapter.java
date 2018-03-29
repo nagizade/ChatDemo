@@ -9,8 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.nagizade.chatdemo.LastMessageModel;
 import com.nagizade.chatdemo.MessageModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Hasan Nagizade on 3/23/2018.
@@ -48,7 +51,6 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
      db.execSQL(LastMessageModel.CREATE_TABLE);
 
     }
-
     public long insertMessage(String username,String phoneNumber,String tableName,String messageContent) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
@@ -89,9 +91,21 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
             long id = db.insert("lastMessages", null, values);
         } else {
             cursor.close();
+
+            //Unix seconds
+            long unix_seconds = System.currentTimeMillis() / 1000L;
+            //convert seconds to milliseconds
+            Date date = new Date(unix_seconds*1000L);
+            // format of the date
+            SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            jdf.setTimeZone(TimeZone.getTimeZone("GMT+4"));
+            String java_date = jdf.format(date);
+
+            values.put("msg_time",java_date);
             values.put("messageContent", messageContent);
-            values.put("contact_id",contactID);
-            long id = db.update("lastMessages", values, "user_number=" + usernumber, null);
+
+            values.put("contact_id", contactID);
+            long id = db.update("lastMessages", values, "user_number = " + usernumber, null);
         }
        // close db connection
         db.close();
@@ -137,7 +151,8 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
         String tableName = "lastMessages";
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + tableName;
+        String selectQuery = "SELECT  * FROM " + tableName + " ORDER BY " +
+                "msg_time" + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -155,7 +170,7 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
                 lastMessages.add(msgm);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         // close db connection
         db.close();
 
@@ -185,4 +200,5 @@ public class DatabaseAdapter extends SQLiteOpenHelper {
         // Create tables again
         onCreate(db);
     }
+
 }

@@ -67,11 +67,18 @@ public class ChatsFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        chatsView = (RecyclerView) getActivity().findViewById(R.id.chatsList);
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity().getApplicationContext());
+        chatsView.setHasFixedSize(true);
+        chatsView.setLayoutManager(mLayoutManager2);
+        DividerItemDecoration decor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+        chatsView.addItemDecoration(decor);
+        chatsView.setItemAnimator(new DefaultItemAnimator());
 
         helper   = new DatabaseAdapter(getActivity());
         db       = helper.getReadableDatabase();
-        messages.clear();
-        messages.addAll(helper.getLastMessages());
+
+
 
         final ItemClickListener listener = new ItemClickListener() {
             @Override
@@ -85,16 +92,12 @@ public class ChatsFragment extends Fragment{
             }
         };
 
-        chatsView = (RecyclerView) getActivity().findViewById(R.id.chatsList);
+        messages.clear();
+        messages.addAll(helper.getLastMessages());
         viewAdapter = new ChatsViewAdapter(messages,listener);
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity().getApplicationContext());
-        chatsView.setHasFixedSize(true);
-        chatsView.setLayoutManager(mLayoutManager2);
-        DividerItemDecoration decor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
-        chatsView.addItemDecoration(decor);
-        chatsView.setItemAnimator(new DefaultItemAnimator());
-        chatsView.setAdapter(viewAdapter);
 
+        chatsView.setAdapter(viewAdapter);
+        viewAdapter.notifyDataSetChanged();
     }
 
 

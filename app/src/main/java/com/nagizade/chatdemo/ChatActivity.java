@@ -46,12 +46,19 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         username       = intent.getStringExtra("Contact name");
-        userNumber     = intent.getStringExtra("Contact number").replaceAll("[\\D]", ""); //remove all special characters from phone number
+        userNumber     = intent.getStringExtra("Contact number");
         contactID      = intent.getStringExtra("Contact id");
         messageContent = (EditText) findViewById(R.id.messageContent);
         sendMessage    = (ImageButton) findViewById(R.id.sendMessage);
         messagesView = (RecyclerView) findViewById(R.id.chat_view);
         helper         = new DatabaseAdapter(this);
+
+
+        if(userNumber.length() == 10) {
+            userNumber = "994"+userNumber.substring(1); //remove the first zero and add 994 instead
+        } else {
+            userNumber = userNumber.replaceAll("[\\D]", ""); //remove all special characters from phone number
+        }
 
         //To be sure that sent message is not empty we will disable and hide sendMessage button
         // It will be visible and enabled only when user enters something
@@ -100,6 +107,8 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessageClick(v);
             }
         });
+
+
 
     }
 
