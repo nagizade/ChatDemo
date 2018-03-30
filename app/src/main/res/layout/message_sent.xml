@@ -12,12 +12,12 @@
         android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="40dp"
         android:background="@drawable/sentmessageshape"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="30dp"
-        android:padding="15dp" />
+        android:layout_marginRight="0dp"
+        android:padding="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/textView4" />
 
 
     <TextView
@@ -26,10 +26,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Time"
         android:id="@+id/textView4"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:textSize="10dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

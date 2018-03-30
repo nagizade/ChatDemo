@@ -10,14 +10,16 @@
         android:layout_width="0dip"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:maxLines="3"
+        android:maxLines="4"
         android:inputType="textCapSentences|textMultiLine" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/sendMessage"
         android:src="@android:drawable/ic_menu_send"
-        android:background="#2196f3" />
+        android:background="@drawable/sendbuttonshape"
+        android:adjustViewBounds="false"
+        android:layout_marginRight="5dp" />
 
 </LinearLayout>
